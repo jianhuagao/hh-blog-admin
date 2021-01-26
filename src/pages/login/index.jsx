@@ -1,22 +1,26 @@
-import { memo, useEffect, useState } from "react";
-import { Button, Form, Input, Checkbox, message } from "antd";
+import React, { memo } from "react";
+import { Button, Form, Input, Checkbox, message,Row, Col } from "antd";
 import { login } from "@/service/login";
 import {
-  BrowserRouter as Router,
+  HashRouter as Router,
   NavLink,
   Switch,
   Route,
   Redirect,
+  useHistory
 } from "react-router-dom";
 import { PageWarp } from "./style";
 
 const LoginBody = () => {
+  const history = useHistory();
   const onFinish = (values) => {
     const { userid, userpwd } = values;
     login({ userid, userpwd })
       .then((res) => {
         message.success(`欢迎回来:${res.username}`);
         window.localStorage.setItem("user", JSON.stringify(res)); // 插入 对象转字符串
+
+        history.push("/dashboard");
         window.location.reload();
       })
       .catch(() => {
@@ -79,35 +83,37 @@ const LoginBody = () => {
 const RegisterBody = () => {
   return <span>暂未开放</span>;
 };
+
 export default memo(function Login() {
-  const [mobile, setMobile] = useState(false);
-  useEffect(() => {
-    window.innerWidth < 620 && setMobile(true);
-  }, [setMobile]);
   return (
     <PageWarp>
-      {mobile || <div className="left">{""}</div>}
-      <div className="right">
-        <div className="loginForm">
-          <Router>
-            <div className="loginTitle">
+      <Row>
+        <Col className="left" xs={0} sm={14} md={14} lg={14} xl={18}>
+          <div className="left">{""}</div>
+        </Col>
+        <Col className="right" xs={24} sm={10} md={10} lg={10} xl={6}>
+          <div className="loginForm">
+            <Router>
+              <div className="loginTitle">
               <span className="loginLink loginLinkAction">
                 <NavLink to="/login">登录</NavLink>
               </span>
-              <span className="loginLink">
+                <span className="loginLink">
                 <NavLink to="/register">注册</NavLink>
               </span>
-            </div>
-            <div className="loginBody">
-              <Switch>
-                <Redirect from="/" to="/login" exact={true} />
-                <Route path="/login" children={<LoginBody />} />
-                <Route path="/register" children={<RegisterBody />} />
-              </Switch>
-            </div>
-          </Router>
-        </div>
-      </div>
+              </div>
+              <div className="loginBody">
+                <Switch>
+                  <Redirect from="/" to="/login" exact={true} />
+                  <Route path="/login" children={<LoginBody />} />
+                  <Route path="/register" children={<RegisterBody />} />
+                </Switch>
+              </div>
+            </Router>
+          </div>
+        </Col>
+        <div className="source">{""}</div>
+      </Row>
     </PageWarp>
   );
 });

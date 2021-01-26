@@ -1,0 +1,1 @@
+export const CHANGE_BLOGTYPE = "page/CHANGE_BLOGTYPE"

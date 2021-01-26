@@ -1,4 +1,7 @@
-import React, { memo } from 'react'
+import React, {memo} from 'react'
+//reducer
+import {Provider} from "react-redux";
+import store from "@/store";
 import {AppWrap} from "./style"
 import Login from "./pages/login"
 import Layout from "./pages/layout"
@@ -9,8 +12,10 @@ const userInfo = JSON.parse(window.localStorage.getItem('user'));
 
 export default memo(function App() {
   return (
-    <AppWrap>
-      {userInfo?<Layout/>:<Login/>}
-    </AppWrap>
+      <AppWrap>
+        <Provider store={store}>
+          {userInfo ? <Layout/> : <Login/>}
+        </Provider>
+      </AppWrap>
   )
 })

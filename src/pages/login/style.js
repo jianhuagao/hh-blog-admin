@@ -1,21 +1,14 @@
 import styled from "styled-components"
 
 export const PageWarp = styled.div`
-  display: flex;
   height: 100vh;
-  //background: url('https://api.sunweihu.com/api/bing1/api.php');
-  background: linear-gradient(to right,rgb(75 176 113),rgb(110 198 103));
+  //background: linear-gradient(to right,rgb(75 176 113),rgb(110 198 103));
+  background: url(${require("@/assets/img/loginbg.jpg").default}) no-repeat top;
   background-size: cover;
-  .left .right{
-  }
-  .left{
-    align-items:center;
-    flex-grow:1;
-  }
   .right{
-    flex-grow:1;
-    max-width: 450px;
-    background-color: rgb(255 255 255 / 69%);
+    z-index: 1;
+    height: 100vh;
+    background-color: rgb(255 255 255 / 81%);
     -webkit-backdrop-filter: blur(20px);
     backdrop-filter: blur(20px);
     .loginForm{
@@ -66,5 +59,14 @@ export const PageWarp = styled.div`
       }
       
     }
+  }
+  .source{
+    position: fixed;
+    bottom: 10px;
+    left: 20px;
+    width: 51px;
+    height: 58px;
+    z-index: 0;
+    background: url(${require("@/assets/img/binglogo.png").default}) no-repeat top;
   }
 `
