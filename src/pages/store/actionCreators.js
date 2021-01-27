@@ -10,9 +10,9 @@ const changeBlogTypeAction = (res) => {
   }
 }
 
-export const getBlogTypeAction = () => {
+export const getBlogTypeAction = (offset, limit) => {
   return dispatch => {
-    BlogType().then(res => {
+    BlogType(offset, limit).then(res => {
       dispatch(changeBlogTypeAction(res))
     })
   }

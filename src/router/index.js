@@ -15,7 +15,7 @@ export const router = [
   {
     path: '/',
     exact: true,
-    render: () => <Redirect to="/Dashboard" />
+    render: () => <Redirect to="/dashboard" />
   },
   {
     path: '/dashboard',

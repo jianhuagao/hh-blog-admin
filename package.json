@@ -11,6 +11,7 @@
     "antd": "^4.11.1",
     "axios": "^0.21.1",
     "craco-less": "^1.17.1",
+    "dayjs": "^1.10.4",
     "immutable": "^4.0.0-rc.12",
     "normalize.css": "^8.0.1",
     "react": "^17.0.1",

@@ -1,5 +1,5 @@
-import React, { memo } from "react";
-import { Link } from "react-router-dom";
+import React, { memo,useState,useEffect } from "react";
+import { Link,useLocation } from "react-router-dom";
 import { MenuWrap } from "./style";
 import { Menu } from 'antd';
 import { BuildOutlined, DotChartOutlined, SettingOutlined } from '@ant-design/icons';
@@ -7,28 +7,34 @@ import { BuildOutlined, DotChartOutlined, SettingOutlined } from '@ant-design/ic
 const { SubMenu } = Menu;
 
 export default memo(function MenuLeft(props) {
+  //当前页面路径
+  const [selectKeys, setSelectKeys] = useState("/dashboard");
+  let location = useLocation();
+  useEffect(() => {
+    setSelectKeys(location.pathname);
+  }, [location]);
   return (
     <MenuWrap>
       <Menu
-          defaultSelectedKeys={['1']}
-          defaultOpenKeys={['sub1']}
           mode="inline"
+          defaultSelectedKeys={selectKeys}
+          selectedKeys={selectKeys}
       >
         <SubMenu key="sub1" icon={<DotChartOutlined />} title="系统实况">
-            <Menu.Item key="1"><Link to="/dashboard">Dashboard</Link></Menu.Item>
+            <Menu.Item key="/dashboard"><Link to="/dashboard">Dashboard</Link></Menu.Item>
         </SubMenu>
         <SubMenu key="sub2" icon={<BuildOutlined />} title="数据变更">
-          <Menu.Item key="2"><Link to="/blogType">分类管理</Link></Menu.Item>
-          <Menu.Item key="3"><Link to="/bannerData">展示数据</Link></Menu.Item>
+          <Menu.Item key="/blogType"><Link to="/blogType">分类管理</Link></Menu.Item>
+          <Menu.Item key="/bannerData"><Link to="/bannerData">展示数据</Link></Menu.Item>
           <SubMenu key="sub3" title="数据管理">
-            <Menu.Item key="4"><Link to="/addBlog">新增</Link></Menu.Item>
-            <Menu.Item key="5"><Link to="/editBlog">编辑</Link></Menu.Item>
+            <Menu.Item key="/addBlog"><Link to="/addBlog">新增</Link></Menu.Item>
+            <Menu.Item key="/editBlog"><Link to="/editBlog">编辑</Link></Menu.Item>
           </SubMenu>
         </SubMenu>
         <SubMenu key="sub4" icon={<SettingOutlined />} title="系统配置">
-          <Menu.Item key="6"><Link to="/user">管理员</Link></Menu.Item>
-          <Menu.Item key="7"><Link to="/menu">菜单管理</Link></Menu.Item>
-          <Menu.Item key="8"><Link to="/website">网站配置</Link></Menu.Item>
+          <Menu.Item key="/user"><Link to="/user">管理员</Link></Menu.Item>
+          <Menu.Item key="/menu"><Link to="/menu">菜单管理</Link></Menu.Item>
+          <Menu.Item key="/website"><Link to="/website">网站配置</Link></Menu.Item>
         </SubMenu>
       </Menu>
     </MenuWrap>
