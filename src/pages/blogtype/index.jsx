@@ -6,13 +6,18 @@ import {
   Drawer,
   Button,
   Form,
-  Col,
-  Row,
   Input,
+  message,
+  Popconfirm,
 } from "antd";
 import dayjs from "dayjs";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
-import { getBlogTypeAction } from "../store/actionCreators";
+import {
+  getBlogTypeAction,
+  editBlogTypeAction,
+  delBlogTypeAction,
+} from "../store/actionCreators";
+import ImgUpload from "@c/imgupload";
 import { BlogTypeWrap } from "./style";
 const { Column } = Table;
 
@@ -29,13 +34,44 @@ export default memo(function BlogType() {
   }, [dispatch, page, pageSize]);
 
   const { blogType } = useSelector(
-    state => ({
+    (state) => ({
       blogType: state.getIn(["page", "blogType"]),
     }),
     shallowEqual
   );
   const { count, rows } = blogType;
 
+  const EditData = async (data) => {
+    const reData = {
+      ...data,
+      udate: undefined,
+      cdate: undefined,
+      del: undefined,
+    };
+    await dispatch(editBlogTypeAction(data.id, reData, page, pageSize));
+    message.success(`修改成功`);
+    setVisible(false);
+  };
+  const DelData = async (id) => {
+    await dispatch(delBlogTypeAction(id, page, pageSize));
+    message.success(`删除成功`);
+  };
+  const TableInputItem = (label, objKey, value) => {
+    return (
+      <Form.Item label={label}>
+        <Input
+          placeholder={label}
+          value={value[objKey]}
+          onChange={(e) => {
+            setSelectData({
+              ...selectData,
+              [objKey]: e.target.value,
+            });
+          }}
+        />
+      </Form.Item>
+    );
+  };
   return (
     <BlogTypeWrap>
       <Table
@@ -52,15 +88,27 @@ export default memo(function BlogType() {
           total: count,
         }}
       >
-        <Column title="id" dataIndex="id" />
-        <Column title="描述" dataIndex="name" />
-        <Column title="Logo" dataIndex="logo_img" responsive={["md"]} />
-        <Column title="version" dataIndex="version" responsive={["md"]} />
-        <Column title="开源协议" dataIndex="protocol" responsive={["md"]} />
-        <Column title="运行环境" dataIndex="system" responsive={["md"]} />
+        <Column title="id" dataIndex="id" align="center"/>
+        <Column title="描述" dataIndex="name" align="center"/>
+        <Column
+          title="Logo"
+          dataIndex="logo_img"
+          responsive={["md"]}
+          align="center"
+          render={(logo_img) => {
+            return(
+              <img src={logo_img} alt="avatar" style={{ width: "50px" }} />
+
+            )
+          }}
+        />
+        <Column title="version" dataIndex="version" responsive={["md"]}  align="center"/>
+        <Column title="开源协议" dataIndex="protocol" responsive={["md"]}  align="center"/>
+        <Column title="平台" dataIndex="system" responsive={["md"]}  align="center"/>
         <Column
           title="状态"
           dataIndex="status"
+          align="center"
           render={(status) => (
             <Tag color={status === 1 ? "green" : "red"}>
               {status === 1 ? "启用" : "禁用"}
@@ -70,6 +118,7 @@ export default memo(function BlogType() {
         <Column
           title="修改时间"
           dataIndex="udate"
+          align="center"
           render={(udate) => {
             return dayjs(udate).format("YYYY-MM-DD HH:mm");
           }}
@@ -78,6 +127,7 @@ export default memo(function BlogType() {
         <Column
           title="创建时间"
           dataIndex="cdate"
+          align="center"
           render={(cdate) => {
             return dayjs(cdate).format("YYYY-MM-DD HH:mm");
           }}
@@ -85,6 +135,7 @@ export default memo(function BlogType() {
         />
         <Column
           title="操作"
+          align="center"
           render={(text, record) => (
             <Space size="middle">
               <Button
@@ -97,16 +148,29 @@ export default memo(function BlogType() {
               >
                 详细
               </Button>
-              <Button type="link" size="small">
-                删除
-              </Button>
-              {/* <a href={record.id}></a> */}
+              <Popconfirm
+                title="是否删除数据?"
+                onConfirm={() => {
+                  DelData(record.id);
+                }}
+                onCancel={() => {
+                  message.info("取消删除");
+                }}
+                okText="是"
+                cancelText="否"
+              >
+                <Button type="link" size="small">
+                  删除
+                </Button>
+              </Popconfirm>
             </Space>
           )}
         />
       </Table>
       <Drawer
-        width="auto"
+        width={(() => {
+          return window.innerWidth < 620 ? "100%" : "30%";
+        })()}
         title="数据详情"
         placement="right"
         onClose={() => {
@@ -115,32 +179,32 @@ export default memo(function BlogType() {
         visible={visible}
       >
         <Form layout="vertical" hideRequiredMark>
-          {Object.keys(selectData).map((item) => {
-            return (
-              item === "cdate" ||
-              item === "udate" ||
-              item === "del" ||
-              item === "status" ||
-              item === "id" || (
-                <Row gutter={16} key={item}>
-                  <Col span={20}>
-                    <Form.Item label={item}>
-                      {item===""}
-                      <Input
-                        placeholder={item}
-                        value={selectData[item]}
-                        onChange={e=>{
-                          setSelectData({ ...selectData,[item] : e.target.value })
-                        }}
-                      />
-                    </Form.Item>
-                  </Col>
-                </Row>
-              )
-            );
-          })}
+          {TableInputItem("类型描述", "name", selectData)}
+          <Form.Item label="LOGO">
+            <ImgUpload
+              url={selectData.logo_img}
+              selectData={selectData}
+              setSelectData={setSelectData}
+            />
+          </Form.Item>
+          {TableInputItem("页面路径", "page_url", selectData)}
+          {TableInputItem("描述", "introduction", selectData)}
+          {TableInputItem("文档路径", "api_url", selectData)}
+          {TableInputItem("官网地址", "website", selectData)}
+          {TableInputItem("作者", "inventor", selectData)}
+          {TableInputItem("协议", "protocol", selectData)}
+          {TableInputItem("版本", "version", selectData)}
+          {TableInputItem("下载", "download", selectData)}
+          {TableInputItem("平台", "system", selectData)}
         </Form>
-        <Button type="primary" onClick={()=>{console.log(selectData)}}>修改</Button>
+        <Button
+          type="primary"
+          onClick={() => {
+            EditData(selectData);
+          }}
+        >
+          修改
+        </Button>
       </Drawer>
     </BlogTypeWrap>
   );

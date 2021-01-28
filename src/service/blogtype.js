@@ -1,6 +1,6 @@
 import request from './request'
 
-export function BlogType(offset, limit) {
+export function getBlogType(offset, limit) {
   return request({
     url: '/blogType',
     params: {
@@ -10,3 +10,17 @@ export function BlogType(offset, limit) {
   })
 }
 
+export function editBlogType(id, data) {
+  return request({
+    method:'put',
+    url: `/blogType/${id}`,
+    data
+  })
+}
+
+export function deleteBlogType(id) {
+  return request({
+    method:'delete',
+    url: `/blogType/${id}`
+  })
+}

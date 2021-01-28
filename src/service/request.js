@@ -13,7 +13,7 @@ instance.interceptors.request.use(config => {
   // 2.某一些请求要求用户必须携带token, 如果没有携带, 那么直接跳转到登录页面
   if (config.url!=="/login"&&config.url!=="/register"){
     const userInfo = JSON.parse(window.localStorage.getItem('user'));//读取 字符串转换成对象才能使用
-    if (userInfo.token){
+    if (!userInfo.token){
       //token不存在时
     }else{
       config.headers.authorization=userInfo.token;
