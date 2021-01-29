@@ -18,6 +18,14 @@ export function editBlogType(id, data) {
   })
 }
 
+export function addBlogType(data) {
+  return request({
+    method:'post',
+    url: `/blogType`,
+    data
+  })
+}
+
 export function deleteBlogType(id) {
   return request({
     method:'delete',

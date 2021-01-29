@@ -9,6 +9,7 @@ import {
   Input,
   message,
   Popconfirm,
+  PageHeader,
 } from "antd";
 import dayjs from "dayjs";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
@@ -16,6 +17,7 @@ import {
   getBlogTypeAction,
   editBlogTypeAction,
   delBlogTypeAction,
+  addBlogTypeAction
 } from "../store/actionCreators";
 import ImgUpload from "@c/imgupload";
 import { BlogTypeWrap } from "./style";
@@ -27,6 +29,7 @@ export default memo(function BlogType() {
   const [pageSize, setPageSize] = useState(10);
   const [selectData, setSelectData] = useState({});
   const [visible, setVisible] = useState(false);
+  const [addFunc, setAddFunc] = useState(false);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -39,6 +42,7 @@ export default memo(function BlogType() {
     }),
     shallowEqual
   );
+  
   const { count, rows } = blogType;
 
   const EditData = async (data) => {
@@ -52,6 +56,11 @@ export default memo(function BlogType() {
     message.success(`修改成功`);
     setVisible(false);
   };
+  const AddData = async (data) => {
+    await dispatch(addBlogTypeAction(data, page, pageSize));
+    message.success(`添加成功`);
+    setVisible(false);
+  }
   const DelData = async (id) => {
     await dispatch(delBlogTypeAction(id, page, pageSize));
     message.success(`删除成功`);
@@ -74,11 +83,18 @@ export default memo(function BlogType() {
   };
   return (
     <BlogTypeWrap>
+      <PageHeader
+        extra={[
+          <Button key="1" type="primary" onClick={()=>{setSelectData({});setVisible(true);setAddFunc(true);}}>
+            新增
+          </Button>,
+        ]}
+      />
       <Table
         dataSource={rows}
         rowKey="id"
         size="middle"
-        loading={!blogType}
+        loading={!rows}
         bordered
         pagination={{
           onChange: (page, pageSize) => {
@@ -88,23 +104,37 @@ export default memo(function BlogType() {
           total: count,
         }}
       >
-        <Column title="id" dataIndex="id" align="center"/>
-        <Column title="描述" dataIndex="name" align="center"/>
+        <Column title="id" dataIndex="id" align="center" />
+        <Column title="描述" dataIndex="name" align="center" />
         <Column
           title="Logo"
           dataIndex="logo_img"
           responsive={["md"]}
           align="center"
           render={(logo_img) => {
-            return(
+            return (
               <img src={logo_img} alt="avatar" style={{ width: "50px" }} />
-
-            )
+            );
           }}
         />
-        <Column title="version" dataIndex="version" responsive={["md"]}  align="center"/>
-        <Column title="开源协议" dataIndex="protocol" responsive={["md"]}  align="center"/>
-        <Column title="平台" dataIndex="system" responsive={["md"]}  align="center"/>
+        <Column
+          title="version"
+          dataIndex="version"
+          responsive={["md"]}
+          align="center"
+        />
+        <Column
+          title="开源协议"
+          dataIndex="protocol"
+          responsive={["md"]}
+          align="center"
+        />
+        <Column
+          title="平台"
+          dataIndex="system"
+          responsive={["md"]}
+          align="center"
+        />
         <Column
           title="状态"
           dataIndex="status"
@@ -143,6 +173,7 @@ export default memo(function BlogType() {
                 size="small"
                 onClick={() => {
                   setVisible(true);
+                  setAddFunc(false);
                   setSelectData(record);
                 }}
               >
@@ -171,7 +202,7 @@ export default memo(function BlogType() {
         width={(() => {
           return window.innerWidth < 620 ? "100%" : "30%";
         })()}
-        title="数据详情"
+        title={addFunc?"新增数据":"编辑数据"}
         placement="right"
         onClose={() => {
           setVisible(false);
@@ -200,10 +231,10 @@ export default memo(function BlogType() {
         <Button
           type="primary"
           onClick={() => {
-            EditData(selectData);
+            addFunc?AddData(selectData):EditData(selectData)
           }}
         >
-          修改
+          {addFunc?"新增":"修改"}
         </Button>
       </Drawer>
     </BlogTypeWrap>

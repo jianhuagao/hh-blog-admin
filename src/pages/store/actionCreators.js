@@ -2,7 +2,8 @@ import * as action from './constants'
 import {
   getBlogType,
   editBlogType,
-  deleteBlogType
+  deleteBlogType,
+  addBlogType
 } from '@/service/blogtype'
 
 const changeBlogTypeAction = (res) => {
@@ -22,6 +23,13 @@ export const getBlogTypeAction = (offset, limit) => {
 export const editBlogTypeAction = (id, data,offset, limit) => {
   return dispatch => {
     editBlogType(id, data).then(res => {
+      dispatch(getBlogTypeAction(offset, limit))
+    })
+  }
+}
+export const addBlogTypeAction = (data,offset, limit) => {
+  return dispatch => {
+    addBlogType(data).then(res => {
       dispatch(getBlogTypeAction(offset, limit))
     })
   }
