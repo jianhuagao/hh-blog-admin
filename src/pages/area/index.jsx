@@ -14,17 +14,16 @@ import {
 import dayjs from "dayjs";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import {
-  getBannerDataAction,
-  editBannerDataAction,
-  delBannerDataAction,
-  addBannerDataAction,
+  getAreaAction,
+  editAreaAction,
+  delAreaAction,
+  addAreaAction,
 } from "../store/actionCreators";
 import ImgUpload from "@c/imgupload";
-import { BannerdataWrap } from "./style";
+import { AreaWrap } from "./style";
 const { Column } = Table;
-const { TextArea } = Input;
 
-export default memo(function Bannerdata(props) {
+export default memo(function Area(props) {
   //hooks
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
@@ -34,17 +33,17 @@ export default memo(function Bannerdata(props) {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getBannerDataAction(page, pageSize));
+    dispatch(getAreaAction(page, pageSize));
   }, [dispatch, page, pageSize]);
 
-  const { bannerData } = useSelector(
+  const { area } = useSelector(
     (state) => ({
-      bannerData: state.getIn(["page", "bannerData"]),
+      area: state.getIn(["page", "area"]),
     }),
     shallowEqual
   );
 
-  const { count, rows } = bannerData;
+  const { count, rows } = area;
 
   const EditData = async (data) => {
     const reData = {
@@ -53,17 +52,17 @@ export default memo(function Bannerdata(props) {
       cdate: undefined,
       del: undefined,
     };
-    await dispatch(editBannerDataAction(data.id, reData, page, pageSize));
+    await dispatch(editAreaAction(data.id, reData, page, pageSize));
     message.success(`修改成功`);
     setVisible(false);
   };
   const AddData = async (data) => {
-    await dispatch(addBannerDataAction(data, page, pageSize));
+    await dispatch(addAreaAction(data, page, pageSize));
     message.success(`添加成功`);
     setVisible(false);
   };
   const DelData = async (id) => {
-    await dispatch(delBannerDataAction(id, page, pageSize));
+    await dispatch(delAreaAction(id, page, pageSize));
     message.success(`删除成功`);
   };
   const TableInputItem = (label, objKey, value) => {
@@ -84,12 +83,12 @@ export default memo(function Bannerdata(props) {
   };
   const updateStatus = async (status, id) => {
     await dispatch(
-      editBannerDataAction(id, { status: status === 1 ? 0 : 1 }, page, pageSize)
+      editAreaAction(id, { status: status === 1 ? 0 : 1 }, page, pageSize)
     );
     message.success(`更改状态成功`);
   };
   return (
-    <BannerdataWrap>
+    <AreaWrap>
       <PageHeader
         extra={[
           <Button
@@ -120,7 +119,7 @@ export default memo(function Bannerdata(props) {
         }}
       >
         <Column title="id" dataIndex="id" align="center" />
-        <Column title="标题" dataIndex="title" align="center" />
+        <Column title="板块名称" dataIndex="title" align="center" />
         <Column
           title="配图"
           dataIndex="img"
@@ -131,8 +130,8 @@ export default memo(function Bannerdata(props) {
           }}
         />
         <Column
-          title="内容"
-          dataIndex="content"
+          title="副标题"
+          dataIndex="second_title"
           responsive={["md"]}
           align="center"
         />
@@ -142,10 +141,11 @@ export default memo(function Bannerdata(props) {
           align="center"
           render={(status, render) => (
             <Tag
-            onClick={(e) => {
-              updateStatus(status, render.id);
-            }}
-            color={status === 1 ? "green" : "red"}>
+              onClick={(e) => {
+                updateStatus(status, render.id);
+              }}
+              color={status === 1 ? "green" : "red"}
+            >
               {status === 1 ? "启用" : "禁用"}
             </Tag>
           )}
@@ -215,25 +215,14 @@ export default memo(function Bannerdata(props) {
         visible={visible}
       >
         <Form layout="vertical" hideRequiredMark>
-          {TableInputItem("标题", "title", selectData)}
+          {TableInputItem("板块名称", "title", selectData)}
+          {TableInputItem("副标题", "second_title", selectData)}
           <Form.Item label="配图">
             <ImgUpload
               dataIndex="img"
               // url={selectData.img}
               selectData={selectData}
               setSelectData={setSelectData}
-            />
-          </Form.Item>
-          <Form.Item label="内容">
-            <TextArea
-              rows={6}
-              value={selectData.content}
-              onChange={(e) => {
-                setSelectData({
-                  ...selectData,
-                  content: e.target.value,
-                });
-              }}
             />
           </Form.Item>
         </Form>
@@ -246,6 +235,6 @@ export default memo(function Bannerdata(props) {
           {addFunc ? "新增" : "修改"}
         </Button>
       </Drawer>
-    </BannerdataWrap>
+    </AreaWrap>
   );
 });

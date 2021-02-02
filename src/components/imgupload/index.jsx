@@ -7,24 +7,49 @@ import { ImgUploadWrap } from "./style";
 
 export default memo(function ImgUpload(props) {
   const [loading, setLoading] = useState(false);
-  const { url,selectData,setSelectData } = props;
+  const { dataIndex, selectData, setSelectData, tailor = false } = props;
   const uploadButton = (
     <div>
       {loading ? <LoadingOutlined /> : <PlusOutlined />}
       <div style={{ marginTop: 8 }}>Upload</div>
     </div>
   );
-  const uploadEvent =async (data) => {
+  const uploadEvent = async (data) => {
     setLoading(true);
-    uploadImg(data).then((ret)=>{
-      setSelectData({...selectData,logo_img:ret})
+    uploadImg(data).then((ret) => {
+      setSelectData({ ...selectData, [dataIndex]: ret });
       setLoading(false);
-    })
-    
+    });
   };
+
   return (
     <ImgUploadWrap>
-      <ImgCrop rotate>
+      {tailor ? (
+        <ImgCrop
+          modalTitle={"图片上传"}
+          modalOk={"上传"}
+          modalCancel={"取消"}
+          rotate
+        >
+          <Upload
+            listType="picture-card"
+            showUploadList={false}
+            customRequest={(data) => {
+              uploadEvent(data);
+            }}
+          >
+            {selectData[dataIndex] ? (
+              <img
+                src={selectData[dataIndex]}
+                alt="avatar"
+                style={{ width: "100%" }}
+              />
+            ) : (
+              uploadButton
+            )}
+          </Upload>
+        </ImgCrop>
+      ) : (
         <Upload
           listType="picture-card"
           showUploadList={false}
@@ -32,13 +57,17 @@ export default memo(function ImgUpload(props) {
             uploadEvent(data);
           }}
         >
-          {url ? (
-            <img src={url} alt="avatar" style={{ width: "100%" }} />
+          {selectData[dataIndex] ? (
+            <img
+              src={selectData[dataIndex]}
+              alt="avatar"
+              style={{ width: "100%" }}
+            />
           ) : (
             uploadButton
           )}
         </Upload>
-      </ImgCrop>
+      )}
     </ImgUploadWrap>
   );
 });

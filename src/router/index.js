@@ -9,6 +9,7 @@ const EditBlog = lazy(_ => import("@p/editblog"));
 const Userinfo = lazy(_ => import("@p/userinfo"));
 const Menu = lazy(_ => import("@p/menu"));
 const Website = lazy(_ => import("@p/website"));
+const Area = lazy(_ => import("@p/area"));
 // const SkeletonComp = lazy(_ => import("@c/skeleton"))
 
 export const router = [
@@ -47,5 +48,10 @@ export const router = [
   {
     path: '/user',
     component: Userinfo
+  }
+  ,
+  {
+    path: '/area',
+    component: Area
   }
 ]

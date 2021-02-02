@@ -17,7 +17,7 @@ import {
   getBlogTypeAction,
   editBlogTypeAction,
   delBlogTypeAction,
-  addBlogTypeAction
+  addBlogTypeAction,
 } from "../store/actionCreators";
 import ImgUpload from "@c/imgupload";
 import { BlogTypeWrap } from "./style";
@@ -42,7 +42,7 @@ export default memo(function BlogType() {
     }),
     shallowEqual
   );
-  
+
   const { count, rows } = blogType;
 
   const EditData = async (data) => {
@@ -60,7 +60,7 @@ export default memo(function BlogType() {
     await dispatch(addBlogTypeAction(data, page, pageSize));
     message.success(`添加成功`);
     setVisible(false);
-  }
+  };
   const DelData = async (id) => {
     await dispatch(delBlogTypeAction(id, page, pageSize));
     message.success(`删除成功`);
@@ -81,11 +81,26 @@ export default memo(function BlogType() {
       </Form.Item>
     );
   };
+
+  const updateStatus = async (status, id) => {
+    await dispatch(
+      editBlogTypeAction(id, { status: status === 1 ? 0 : 1 }, page, pageSize)
+    );
+    message.success(`更改状态成功`);
+  };
   return (
     <BlogTypeWrap>
       <PageHeader
         extra={[
-          <Button key="1" type="primary" onClick={()=>{setSelectData({});setVisible(true);setAddFunc(true);}}>
+          <Button
+            key="1"
+            type="primary"
+            onClick={() => {
+              setSelectData({});
+              setVisible(true);
+              setAddFunc(true);
+            }}
+          >
             新增
           </Button>,
         ]}
@@ -139,8 +154,13 @@ export default memo(function BlogType() {
           title="状态"
           dataIndex="status"
           align="center"
-          render={(status) => (
-            <Tag color={status === 1 ? "green" : "red"}>
+          render={(status, render) => (
+            <Tag
+              onClick={(e) => {
+                updateStatus(status, render.id);
+              }}
+              color={status === 1 ? "green" : "red"}
+            >
               {status === 1 ? "启用" : "禁用"}
             </Tag>
           )}
@@ -202,7 +222,7 @@ export default memo(function BlogType() {
         width={(() => {
           return window.innerWidth < 620 ? "100%" : "30%";
         })()}
-        title={addFunc?"新增数据":"编辑数据"}
+        title={addFunc ? "新增数据" : "编辑数据"}
         placement="right"
         onClose={() => {
           setVisible(false);
@@ -213,7 +233,9 @@ export default memo(function BlogType() {
           {TableInputItem("类型描述", "name", selectData)}
           <Form.Item label="LOGO">
             <ImgUpload
-              url={selectData.logo_img}
+              dataIndex="logo_img"
+              // url={selectData.logo_img}
+              tailor={true}
               selectData={selectData}
               setSelectData={setSelectData}
             />
@@ -231,10 +253,10 @@ export default memo(function BlogType() {
         <Button
           type="primary"
           onClick={() => {
-            addFunc?AddData(selectData):EditData(selectData)
+            addFunc ? AddData(selectData) : EditData(selectData);
           }}
         >
-          {addFunc?"新增":"修改"}
+          {addFunc ? "新增" : "修改"}
         </Button>
       </Drawer>
     </BlogTypeWrap>
