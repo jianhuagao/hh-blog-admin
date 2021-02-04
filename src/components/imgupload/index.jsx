@@ -7,7 +7,13 @@ import { ImgUploadWrap } from "./style";
 
 export default memo(function ImgUpload(props) {
   const [loading, setLoading] = useState(false);
-  const { dataIndex, selectData, setSelectData, tailor = false } = props;
+  const {
+    dataIndex,
+    selectData,
+    setSelectData,
+    tailor = false,
+    callBack,
+  } = props;
   const uploadButton = (
     <div>
       {loading ? <LoadingOutlined /> : <PlusOutlined />}
@@ -17,7 +23,8 @@ export default memo(function ImgUpload(props) {
   const uploadEvent = async (data) => {
     setLoading(true);
     uploadImg(data).then((ret) => {
-      setSelectData({ ...selectData, [dataIndex]: ret });
+      setSelectData && setSelectData({ ...selectData, [dataIndex]: ret });
+      callBack && callBack();
       setLoading(false);
     });
   };
@@ -57,7 +64,7 @@ export default memo(function ImgUpload(props) {
             uploadEvent(data);
           }}
         >
-          {selectData[dataIndex] ? (
+          {selectData ? (
             <img
               src={selectData[dataIndex]}
               alt="avatar"

@@ -1,4 +1,4 @@
 import styled from "styled-components"
 
-export const MenuWrap = styled.div`
+export const ImgPoolWrap = styled.div`
 `

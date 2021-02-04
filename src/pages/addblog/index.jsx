@@ -1,10 +1,10 @@
 import React, { memo } from "react";
-import { AddblogWrap } from "./style";
+import { AddBlogWrap } from "./style";
 
-export default memo(function Addblog(props) {
+export default memo(function AddBlog(props) {
   return (
-    <AddblogWrap>
-      <h1>Addblog</h1>
-    </AddblogWrap>
+    <AddBlogWrap>
+      <h1>AddBlog</h1>
+    </AddBlogWrap>
   );
 });

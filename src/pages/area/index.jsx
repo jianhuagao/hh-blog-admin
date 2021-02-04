@@ -108,7 +108,6 @@ export default memo(function Area(props) {
         dataSource={rows}
         rowKey="id"
         size="middle"
-        loading={!rows}
         bordered
         pagination={{
           onChange: (page, pageSize) => {

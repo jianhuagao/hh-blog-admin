@@ -27,9 +27,10 @@ export default memo(function MenuLeft(props) {
           <Menu.Item key="/blogType"><Link to="/blogType">分类管理</Link></Menu.Item>
           <Menu.Item key="/bannerData"><Link to="/bannerData">主页推荐</Link></Menu.Item>
           <Menu.Item key="/area"><Link to="/area">板块管理</Link></Menu.Item>
-          <SubMenu key="sub3" title="图床管理">
-            <Menu.Item key="/addBlog"><Link to="/addBlog">图片管理</Link></Menu.Item>
-            <Menu.Item key="/editBlog"><Link to="/editBlog">添加图片</Link></Menu.Item>
+          <Menu.Item key="/imgPool"><Link to="/imgPool">图床管理</Link></Menu.Item>
+          <SubMenu key="sub3" title="资讯">
+            <Menu.Item key="/addBlog"><Link to="/addBlog">资讯发布</Link></Menu.Item>
+            <Menu.Item key="/editBlog"><Link to="/editBlog">资讯管理</Link></Menu.Item>
           </SubMenu>
         </SubMenu>
         <SubMenu key="sub4" icon={<SettingOutlined />} title="系统配置">

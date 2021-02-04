@@ -109,7 +109,6 @@ export default memo(function BlogType() {
         dataSource={rows}
         rowKey="id"
         size="middle"
-        loading={!rows}
         bordered
         pagination={{
           onChange: (page, pageSize) => {

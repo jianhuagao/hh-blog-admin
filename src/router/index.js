@@ -4,8 +4,9 @@ import { Redirect } from 'react-router-dom'
 const Dashboard = lazy(_ => import("@p/dashboard"));
 const BlogType = lazy(_ => import("@p/blogtype"));
 const BannerData = lazy(_ => import("@p/bannerdata"));
-const AddBlog = lazy(_ => import("@p/addblog"));
+const ImgPool = lazy(_ => import("@p/imgPool"));
 const EditBlog = lazy(_ => import("@p/editblog"));
+const AddBlog = lazy(_ => import("@p/addblog"));
 const Userinfo = lazy(_ => import("@p/userinfo"));
 const Menu = lazy(_ => import("@p/menu"));
 const Website = lazy(_ => import("@p/website"));
@@ -31,6 +32,9 @@ export const router = [
     component: BannerData
   },
   {
+    path: '/ImgPool',
+    component: ImgPool
+  },{
     path: '/addBlog',
     component: AddBlog
   },

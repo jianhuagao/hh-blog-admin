@@ -8,3 +8,11 @@ export const changeUserAction = (res) => {
     })
   }
 }
+export const changeGlobalLoadingAction = (res) => {
+  return dispatch=>{
+    dispatch({
+      type: action.CHANGE_GLOBALLOADING,
+      globalLoading: res
+    })
+  }
+}

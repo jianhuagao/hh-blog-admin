@@ -7,4 +7,4 @@ const proBaseURL = "http://121.4.115.182:7001/api/v1";
 export const BASE_URL = process.env.NODE_ENV === 'development' ? devBaseURL : proBaseURL;
 
 //超时配置
-export const TIMEOUT = 30000;
+export const TIMEOUT = 60000;

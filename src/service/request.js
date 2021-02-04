@@ -1,4 +1,6 @@
 import axios from 'axios'
+import { changeGlobalLoadingAction } from "@/global-data/store/actionCreators";
+import store from "@/store";
 // 导入配置
 import { BASE_URL, TIMEOUT } from './config'
 
@@ -10,6 +12,7 @@ const instance = axios.create({
 
 instance.interceptors.request.use(config => {
   // 1.发送网络请求时, 在界面的中间位置显示Loading的组件
+  store.dispatch(changeGlobalLoadingAction(true));
   // 2.某一些请求要求用户必须携带token, 如果没有携带, 那么直接跳转到登录页面
   if (config.url!=="/login"&&config.url!=="/register"){
     const userInfo = JSON.parse(window.localStorage.getItem('user'));//读取 字符串转换成对象才能使用
@@ -27,8 +30,10 @@ instance.interceptors.request.use(config => {
 });
 
 instance.interceptors.response.use(res => {
+  store.dispatch(changeGlobalLoadingAction(false));
   return res.data;
 }, err => {
+  store.dispatch(changeGlobalLoadingAction(false));
   if (err && err.response) {
     switch (err.response.status) {
       case 400:

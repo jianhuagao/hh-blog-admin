@@ -17,6 +17,12 @@ import {
   deleteArea,
   addArea
 } from '@/service/area'
+import {
+  getImgPool,
+  deleteImgPool
+} from '@/service/imgPool'
+
+
 
 //BlogType~
 const changeBlogTypeAction = (res) => {
@@ -32,21 +38,21 @@ export const getBlogTypeAction = (offset, limit) => {
     })
   }
 }
-export const editBlogTypeAction = (id, data,offset, limit) => {
+export const editBlogTypeAction = (id, data, offset, limit) => {
   return dispatch => {
     editBlogType(id, data).then(res => {
       dispatch(getBlogTypeAction(offset, limit))
     })
   }
 }
-export const addBlogTypeAction = (data,offset, limit) => {
+export const addBlogTypeAction = (data, offset, limit) => {
   return dispatch => {
     addBlogType(data).then(res => {
       dispatch(getBlogTypeAction(offset, limit))
     })
   }
 }
-export const delBlogTypeAction = (id,offset, limit) => {
+export const delBlogTypeAction = (id, offset, limit) => {
   return dispatch => {
     deleteBlogType(id).then(res => {
       dispatch(getBlogTypeAction(offset, limit))
@@ -69,21 +75,21 @@ export const getBannerDataAction = (offset, limit) => {
     })
   }
 }
-export const editBannerDataAction = (id, data,offset, limit) => {
+export const editBannerDataAction = (id, data, offset, limit) => {
   return dispatch => {
     editBanner(id, data).then(res => {
       dispatch(getBannerDataAction(offset, limit))
     })
   }
 }
-export const addBannerDataAction = (data,offset, limit) => {
+export const addBannerDataAction = (data, offset, limit) => {
   return dispatch => {
     addBanner(data).then(res => {
       dispatch(getBannerDataAction(offset, limit))
     })
   }
 }
-export const delBannerDataAction = (id,offset, limit) => {
+export const delBannerDataAction = (id, offset, limit) => {
   return dispatch => {
     deleteBanner(id).then(res => {
       dispatch(getBannerDataAction(offset, limit))
@@ -105,24 +111,46 @@ export const getAreaAction = (offset, limit) => {
     })
   }
 }
-export const editAreaAction = (id, data,offset, limit) => {
+export const editAreaAction = (id, data, offset, limit) => {
   return dispatch => {
     editArea(id, data).then(res => {
       dispatch(getAreaAction(offset, limit))
     })
   }
 }
-export const addAreaAction = (data,offset, limit) => {
+export const addAreaAction = (data, offset, limit) => {
   return dispatch => {
     addArea(data).then(res => {
       dispatch(getAreaAction(offset, limit))
     })
   }
 }
-export const delAreaAction = (id,offset, limit) => {
+export const delAreaAction = (id, offset, limit) => {
   return dispatch => {
     deleteArea(id).then(res => {
       dispatch(getAreaAction(offset, limit))
+    })
+  }
+}
+
+//imgPool~
+const changeImgPoolAction = (res) => {
+  return {
+    type: action.CHANGE_IMGPOOL,
+    imgPool: res
+  }
+}
+export const getImgPoolAction = (offset, limit) => {
+  return dispatch => {
+    getImgPool(offset, limit).then(res => {
+      dispatch(changeImgPoolAction(res))
+    })
+  }
+}
+export const delImgPoolAction = (id, offset, limit) => {
+  return dispatch => {
+    deleteImgPool(id).then(res => {
+      dispatch(getImgPoolAction(offset, limit))
     })
   }
 }
