@@ -7,12 +7,11 @@ import { ImgUploadWrap } from "./style";
 
 export default memo(function ImgUpload(props) {
   const [loading, setLoading] = useState(false);
+  const [retImg, setRetImg] = useState(null);
   const {
-    dataIndex,
-    selectData,
-    setSelectData,
-    tailor = false,
-    callBack,
+    originalImg,//原始图,在编辑时会将原来的图显示上去
+    tailor = false,//是否需要裁减
+    callBack,//回调函数,回传上传后的url
   } = props;
   const uploadButton = (
     <div>
@@ -23,8 +22,8 @@ export default memo(function ImgUpload(props) {
   const uploadEvent = async (data) => {
     setLoading(true);
     uploadImg(data).then((ret) => {
-      setSelectData && setSelectData({ ...selectData, [dataIndex]: ret });
-      callBack && callBack();
+      setRetImg(ret);
+      callBack && callBack(ret);
       setLoading(false);
     });
   };
@@ -45,12 +44,10 @@ export default memo(function ImgUpload(props) {
               uploadEvent(data);
             }}
           >
-            {selectData[dataIndex] ? (
-              <img
-                src={selectData[dataIndex]}
-                alt="avatar"
-                style={{ width: "100%" }}
-              />
+            {originalImg ? (
+              <img src={originalImg} alt="avatar" style={{ width: "100%" }} />
+            ) : retImg ? (
+              <img src={retImg} alt="avatar" style={{ width: "100%" }} />
             ) : (
               uploadButton
             )}
@@ -64,12 +61,10 @@ export default memo(function ImgUpload(props) {
             uploadEvent(data);
           }}
         >
-          {selectData ? (
-            <img
-              src={selectData[dataIndex]}
-              alt="avatar"
-              style={{ width: "100%" }}
-            />
+          {originalImg ? (
+            <img src={originalImg} alt="avatar" style={{ width: "100%" }} />
+          ) : retImg ? (
+            <img src={retImg} alt="avatar" style={{ width: "100%" }} />
           ) : (
             uploadButton
           )}

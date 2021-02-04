@@ -21,6 +21,11 @@ import {
   getImgPool,
   deleteImgPool
 } from '@/service/imgPool'
+import {
+  getBlog,
+  editBlog,
+  deleteBlog,
+} from '@/service/blog'
 
 
 
@@ -151,6 +156,36 @@ export const delImgPoolAction = (id, offset, limit) => {
   return dispatch => {
     deleteImgPool(id).then(res => {
       dispatch(getImgPoolAction(offset, limit))
+    })
+  }
+}
+
+//blog~
+const changeBlogAction = (res) => {
+  return {
+    type: action.CHANGE_BLOG,
+    area: res
+  }
+}
+export const getBlogAction = (offset, limit) => {
+  return dispatch => {
+    getBlog(offset, limit).then(res => {
+      dispatch(changeBlogAction(res))
+    })
+  }
+}
+export const editBlogAction = (id, data, offset, limit) => {
+  return dispatch => {
+    editBlog(id, data).then(res => {
+      dispatch(getBlogAction(offset, limit))
+    })
+  }
+}
+
+export const delBlogAction = (id, offset, limit) => {
+  return dispatch => {
+    deleteBlog(id).then(res => {
+      dispatch(getBlogAction(offset, limit))
     })
   }
 }

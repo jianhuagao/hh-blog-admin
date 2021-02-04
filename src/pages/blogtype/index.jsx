@@ -232,11 +232,11 @@ export default memo(function BlogType() {
           {TableInputItem("类型描述", "name", selectData)}
           <Form.Item label="LOGO">
             <ImgUpload
-              dataIndex="logo_img"
-              // url={selectData.logo_img}
-              tailor={true}
-              selectData={selectData}
-              setSelectData={setSelectData}
+              tailor={true}//是否需要裁减
+              originalImg={selectData.logo_img}//原始图,在编辑时会将原来的图显示上去
+              callBack={(ret)=>{
+                setSelectData({ ...selectData, logo_img: ret })
+              }}
             />
           </Form.Item>
           {TableInputItem("页面路径", "page_url", selectData)}

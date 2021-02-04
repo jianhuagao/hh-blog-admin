@@ -10,6 +10,7 @@ import {
   message,
   Popconfirm,
   PageHeader,
+  InputNumber 
 } from "antd";
 import dayjs from "dayjs";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
@@ -57,6 +58,7 @@ export default memo(function Area(props) {
     setVisible(false);
   };
   const AddData = async (data) => {
+    console.log(data)
     await dispatch(addAreaAction(data, page, pageSize));
     message.success(`添加成功`);
     setVisible(false);
@@ -131,6 +133,12 @@ export default memo(function Area(props) {
         <Column
           title="副标题"
           dataIndex="second_title"
+          responsive={["md"]}
+          align="center"
+        />
+        <Column
+          title="排序"
+          dataIndex="sort"
           responsive={["md"]}
           align="center"
         />
@@ -218,10 +226,21 @@ export default memo(function Area(props) {
           {TableInputItem("副标题", "second_title", selectData)}
           <Form.Item label="配图">
             <ImgUpload
-              dataIndex="img"
-              // url={selectData.img}
-              selectData={selectData}
-              setSelectData={setSelectData}
+              originalImg={selectData.img} //原始图,在编辑时会将原来的图显示上去
+              callBack={(ret) => {
+                setSelectData({ ...selectData, img: ret });
+              }}
+            />
+          </Form.Item>
+          <Form.Item label="排序">
+            <InputNumber
+              value={selectData.sort}
+              onChange={(val) => {
+                setSelectData({
+                  ...selectData,
+                  sort: val,
+                });
+              }}
             />
           </Form.Item>
         </Form>

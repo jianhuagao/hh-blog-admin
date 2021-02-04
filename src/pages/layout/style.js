@@ -9,9 +9,11 @@ export const LayoutWrap = styled.div`
   }
   .sider{
     background-color:white;
-    height:100vh;
+    height:90vh;
   }
   .content{
+    height:90vh;
+    overflow-y:scroll;
     background-color:white;
     box-shadow: inset 0 8px 16px 0 rgba(28,31,33,.1); 
   }

@@ -11,10 +11,14 @@ import {
   PageHeader,
   Button,
   Modal,
-  Statistic
+  Statistic,
 } from "antd";
 import dayjs from "dayjs";
-import { DeleteOutlined, FileImageOutlined ,PieChartOutlined} from "@ant-design/icons";
+import {
+  DeleteOutlined,
+  FileImageOutlined,
+  PieChartOutlined,
+} from "@ant-design/icons";
 import ImgUpload from "@c/imgupload";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import { getImgPoolAction, delImgPoolAction } from "@p/store/actionCreators";
@@ -75,6 +79,7 @@ export default memo(function ImgPool(props) {
             return (
               <Col xs={12} sm={8} md={6} lg={6} xl={6} key={index}>
                 <Card
+                  hoverable
                   style={{ textAlign: "center" }}
                   actions={[
                     <Popconfirm
@@ -128,7 +133,7 @@ export default memo(function ImgPool(props) {
         }}
       >
         <ImgUpload
-          callBack={async () =>  {
+          callBack={async (ret) => {
             message.success("上传成功!🎉");
             setIsModalVisible(false);
             await dispatch(getImgPoolAction(page, pageSize));

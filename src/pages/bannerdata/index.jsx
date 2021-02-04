@@ -141,10 +141,11 @@ export default memo(function Bannerdata(props) {
           align="center"
           render={(status, render) => (
             <Tag
-            onClick={(e) => {
-              updateStatus(status, render.id);
-            }}
-            color={status === 1 ? "green" : "red"}>
+              onClick={(e) => {
+                updateStatus(status, render.id);
+              }}
+              color={status === 1 ? "green" : "red"}
+            >
               {status === 1 ? "启用" : "禁用"}
             </Tag>
           )}
@@ -217,10 +218,10 @@ export default memo(function Bannerdata(props) {
           {TableInputItem("标题", "title", selectData)}
           <Form.Item label="配图">
             <ImgUpload
-              dataIndex="img"
-              // url={selectData.img}
-              selectData={selectData}
-              setSelectData={setSelectData}
+              originalImg={selectData.img} //原始图,在编辑时会将原来的图显示上去
+              callBack={(ret) => {
+                setSelectData({ ...selectData, img: ret });
+              }}
             />
           </Form.Item>
           <Form.Item label="内容">
