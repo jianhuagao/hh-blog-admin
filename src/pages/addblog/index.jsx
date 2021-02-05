@@ -1,9 +1,13 @@
-import React, { memo, useRef, useState } from "react";
-import { Button, Input, Form, message, Collapse, Select,Result } from "antd";
+import React, { memo, useRef, useState, useEffect } from "react";
+import { Button, Input, Form, message, Collapse, Select, Result } from "antd";
 //redux
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
-import { getBlogTypeAction, getAreaAction } from "../store/actionCreators";
-import { useHistory } from "react-router-dom";
+import {
+  getBlogTypeAction,
+  getAreaAction,
+  getBlogDetailAction,
+} from "../store/actionCreators";
+import { useHistory, useParams } from "react-router-dom";
 import { AddBlogWrap } from "./style";
 import ImgUpload from "@c/imgupload";
 import MarkdownIt from "markdown-it";
@@ -13,14 +17,19 @@ import { addBlog } from "@/service/blog";
 import "react-markdown-editor-lite/lib/index.css";
 const { Panel } = Collapse;
 const { Option } = Select;
-export default memo(function AddBlog(props) {
+
+export default memo(function AddBlog() {
+  const dispatch = useDispatch();
+  const { id } = useParams();
+  //在完成时显示完成组件
   const [result, setResult] = useState(false);
   const [resultData, setResultData] = useState("");
+  //上传图片后的地址
   const [retImg, setRetImg] = useState("");
   const history = useHistory();
   const mdParser = new MarkdownIt(/* Markdown-it options */);
   const mdRef = useRef(null);
-  const dispatch = useDispatch();
+  //俩下拉框
   const { blogType } = useSelector(
     (state) => ({
       blogType: state.getIn(["page", "blogType"]),
@@ -33,7 +42,33 @@ export default memo(function AddBlog(props) {
     }),
     shallowEqual
   );
+  //编辑时的填充数据
+  useEffect(() => {
+    dispatch(getBlogDetailAction(id));
+  }, [id, dispatch]);
+  const { blogDetail } = useSelector(
+    (state) => ({
+      blogDetail: state.getIn(["page", "blogDetail"]),
+    }),
+    shallowEqual
+  );
+  const [formData] = Form.useForm();
+  //当有id时默认先加载下拉框
+  useEffect(() => {
+    if (id !== "new") {
+      blogType.rows || dispatch(getBlogTypeAction());
+      area.rows || dispatch(getAreaAction());
+    }
+  }, [id, blogType, area, dispatch]);
+  //当有id时填充数据
+  useEffect(() => {
+    if (blogDetail.id) {
+      formData.setFieldsValue(blogDetail);
+      mdRef.current.value="111111111111"
+    }
+  }, [blogDetail, formData]);
 
+  //提交操作
   const onFinish = (values) => {
     const mdVal = mdRef.current.getMdValue();
     const showimg = retImg;
@@ -48,26 +83,30 @@ export default memo(function AddBlog(props) {
       location: "",
       ...values,
     };
+    //直接axios
     addBlog(blog).then((res) => {
       message.success("发布成功🎉");
       setResult(true);
-      setResultData(res)
+      setResultData(res);
     });
   };
 
   const onFinishFailed = (errorInfo) => {
-    console.log("Failed:", errorInfo);
+    message.error("请填写完整数据!");
   };
+
   return (
     <AddBlogWrap>
       {!result ? (
         <Form
           name="basic"
-          initialValues={{
-            remember: true,
-          }}
+          // initialValues={{
+          //   remember: true,
+          // }}
           onFinish={onFinish}
           onFinishFailed={onFinishFailed}
+          form={formData}
+          initialValues={blogDetail}
         >
           <Collapse defaultActiveKey={["1"]} ghost>
             <Panel header="资讯详情" key="1">
@@ -83,6 +122,7 @@ export default memo(function AddBlog(props) {
               >
                 <Input />
               </Form.Item>
+              {/* {TableInputItem("标题", "title", selectData, true)} */}
               <Form.Item
                 label="概述"
                 name="resume"
@@ -97,8 +137,8 @@ export default memo(function AddBlog(props) {
               </Form.Item>
               <Form.Item label="首页图">
                 <ImgUpload
+                  originalImg={blogDetail.showimg && blogDetail.showimg}
                   callBack={(ret) => {
-                    // message.success(ret)
                     setRetImg(ret);
                   }}
                 />
@@ -147,7 +187,6 @@ export default memo(function AddBlog(props) {
                     })}
                 </Select>
               </Form.Item>
-
               <Form.Item
                 label="作者"
                 name="author"
@@ -160,11 +199,9 @@ export default memo(function AddBlog(props) {
               >
                 <Input style={{ maxWidth: 300 }} />
               </Form.Item>
-
               <Form.Item label="来源" name="source">
                 <Input style={{ maxWidth: 300 }} />
               </Form.Item>
-
               <Form.Item label="备注" name="remark">
                 <Input.TextArea rows={3} />
               </Form.Item>
@@ -188,14 +225,30 @@ export default memo(function AddBlog(props) {
           title="成功发布你的资讯!"
           subTitle={
             <div>
-              如果需要查看请 <a href={resultData} target="blank">点击这里🎯</a>
+              如果需要查看请{" "}
+              <a href={resultData} target="blank">
+                点击这里🎯
+              </a>
             </div>
           }
           extra={[
-            <Button type="primary" key="console" onClick={e=>{setResult(false);}}>
+            <Button
+              type="primary"
+              key="console"
+              onClick={(e) => {
+                setResult(false);
+              }}
+            >
               再写一篇
             </Button>,
-            <Button key="buy"  onClick={e=>{history.push("/editBlog");}}>查看列表</Button>,
+            <Button
+              key="buy"
+              onClick={(e) => {
+                history.push("/editBlog");
+              }}
+            >
+              查看列表
+            </Button>,
           ]}
         />
       )}

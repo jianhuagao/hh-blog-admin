@@ -6,6 +6,7 @@ const defaultState = Map({
   area: [],
   imgPool: [],
   blog: [],
+  blogDetail: {},
 })
 function reducer(state = defaultState, actions) {
   switch (actions.type) {
@@ -19,6 +20,8 @@ function reducer(state = defaultState, actions) {
       return state.set("imgPool", actions.imgPool)
     case Type.CHANGE_BLOG:
       return state.set("blog", actions.blog)
+    case Type.CHANGE_BLOGDETAIL:
+      return state.set("blogDetail", actions.blogDetail)
     default:
       return state
   }

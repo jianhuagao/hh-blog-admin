@@ -35,7 +35,7 @@ export const router = [
     path: '/ImgPool',
     component: ImgPool
   },{
-    path: '/addBlog',
+    path: '/addBlog/:id',
     component: AddBlog
   },
   {

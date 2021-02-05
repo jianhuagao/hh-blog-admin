@@ -31,3 +31,8 @@ export function deleteBlog(id) {
     url: `/blog/${id}`
   })
 }
+export function getBlogDetail(id) {
+  return request({
+    url: `/blog/${id}`
+  })
+}

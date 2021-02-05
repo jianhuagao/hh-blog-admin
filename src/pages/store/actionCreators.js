@@ -25,6 +25,7 @@ import {
   getBlog,
   editBlog,
   deleteBlog,
+  getBlogDetail
 } from '@/service/blog'
 
 
@@ -164,7 +165,7 @@ export const delImgPoolAction = (id, offset, limit) => {
 const changeBlogAction = (res) => {
   return {
     type: action.CHANGE_BLOG,
-    area: res
+    blog: res
   }
 }
 export const getBlogAction = (offset, limit) => {
@@ -187,5 +188,23 @@ export const delBlogAction = (id, offset, limit) => {
     deleteBlog(id).then(res => {
       dispatch(getBlogAction(offset, limit))
     })
+  }
+}
+
+const changeBlogDetailAction = (res) => ({
+  type: action.CHANGE_BLOGDETAIL,
+  blogDetail: res
+})
+
+export const getBlogDetailAction = (id) => {
+  return dispatch => {
+    //如果是新增,则不需要
+    if (id==="new") {
+      dispatch(changeBlogDetailAction({}))
+    }else{
+      getBlogDetail(id).then(res => {
+        dispatch(changeBlogDetailAction(res))
+      })
+    }
   }
 }
