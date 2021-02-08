@@ -12,7 +12,7 @@ import { AddBlogWrap } from "./style";
 import ImgUpload from "@c/imgupload";
 import MarkdownIt from "markdown-it";
 import MdEditor from "react-markdown-editor-lite";
-import { addBlog } from "@/service/blog";
+import { addBlog,editBlog } from "@/service/blog";
 // import style manually
 import "react-markdown-editor-lite/lib/index.css";
 const { Panel } = Collapse;
@@ -45,6 +45,10 @@ export default memo(function AddBlog() {
   //编辑时的填充数据
   useEffect(() => {
     dispatch(getBlogDetailAction(id));
+    return () => {
+      //组件卸载时，清除掉详情数据
+      dispatch(getBlogDetailAction("new"));
+    };
   }, [id, dispatch]);
   const { blogDetail } = useSelector(
     (state) => ({
@@ -64,7 +68,8 @@ export default memo(function AddBlog() {
   useEffect(() => {
     if (blogDetail.id) {
       formData.setFieldsValue(blogDetail);
-      mdRef.current.value="111111111111"
+      setRetImg(blogDetail.showimg);
+      mdRef.current.setText(blogDetail.content);
     }
   }, [blogDetail, formData]);
 
@@ -74,21 +79,36 @@ export default memo(function AddBlog() {
     const showimg = retImg;
     if (!(mdVal && showimg)) {
       message.error("数据不完整");
+      return
     }
-    const blog = {
-      content: mdVal,
-      showimg,
-      read: 1,
-      good: 0,
-      location: "",
-      ...values,
-    };
-    //直接axios
-    addBlog(blog).then((res) => {
-      message.success("发布成功🎉");
-      setResult(true);
-      setResultData(res);
-    });
+    if (id === "new") {
+      const blog = {
+        content: mdVal,
+        showimg,
+        read: 1,
+        good: 0,
+        location: "",
+        ...values,
+      };
+      //直接axios
+      addBlog(blog).then((res) => {
+        message.success("发布成功🎉");
+        setResult(true);
+        setResultData(res);
+      });
+    } else {
+      const blog = {
+        content: mdVal,
+        showimg,
+        ...values,
+      };
+      //直接axios
+      editBlog(id,blog).then((res) => {
+        message.success("修改成功🎉");
+        setResult(true);
+        setResultData(res);
+      });
+    }
   };
 
   const onFinishFailed = (errorInfo) => {
@@ -137,7 +157,7 @@ export default memo(function AddBlog() {
               </Form.Item>
               <Form.Item label="首页图">
                 <ImgUpload
-                  originalImg={blogDetail.showimg && blogDetail.showimg}
+                  originalImg={retImg && retImg}
                   callBack={(ret) => {
                     setRetImg(ret);
                   }}
