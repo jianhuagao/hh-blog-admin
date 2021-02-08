@@ -12,7 +12,7 @@ import { AddBlogWrap } from "./style";
 import ImgUpload from "@c/imgupload";
 import MarkdownIt from "markdown-it";
 import MdEditor from "react-markdown-editor-lite";
-import { addBlog,editBlog } from "@/service/blog";
+import { addBlog, editBlog } from "@/service/blog";
 // import style manually
 import "react-markdown-editor-lite/lib/index.css";
 const { Panel } = Collapse;
@@ -79,7 +79,7 @@ export default memo(function AddBlog() {
     const showimg = retImg;
     if (!(mdVal && showimg)) {
       message.error("数据不完整");
-      return
+      return;
     }
     if (id === "new") {
       const blog = {
@@ -103,7 +103,7 @@ export default memo(function AddBlog() {
         ...values,
       };
       //直接axios
-      editBlog(id,blog).then((res) => {
+      editBlog(id, blog).then((res) => {
         message.success("修改成功🎉");
         setResult(true);
         setResultData(res);
@@ -252,15 +252,17 @@ export default memo(function AddBlog() {
             </div>
           }
           extra={[
-            <Button
-              type="primary"
-              key="console"
-              onClick={(e) => {
-                setResult(false);
-              }}
-            >
-              再写一篇
-            </Button>,
+            id === "new" && (
+              <Button
+                type="primary"
+                key="console"
+                onClick={(e) => {
+                  setResult(false);
+                }}
+              >
+                再写一篇
+              </Button>
+            ),
             <Button
               key="buy"
               onClick={(e) => {
