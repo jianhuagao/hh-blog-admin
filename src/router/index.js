@@ -11,6 +11,7 @@ const Userinfo = lazy(_ => import("@p/userinfo"));
 const Menu = lazy(_ => import("@p/menu"));
 const Website = lazy(_ => import("@p/website"));
 const Area = lazy(_ => import("@p/area"));
+const Access = lazy(_ => import("@p/access"));
 // const SkeletonComp = lazy(_ => import("@c/skeleton"))
 
 export const router = [
@@ -22,6 +23,9 @@ export const router = [
   {
     path: '/dashboard',
     component: Dashboard
+  },{
+    path: '/access',
+    component: Access
   },
   {
     path: '/blogType',

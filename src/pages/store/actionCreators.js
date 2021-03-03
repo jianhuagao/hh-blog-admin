@@ -27,7 +27,10 @@ import {
   deleteBlog,
   getBlogDetail
 } from '@/service/blog'
-
+import {
+  getAccess,
+  deleteAccess
+} from '@/service/access'
 
 
 //BlogType~
@@ -206,5 +209,27 @@ export const getBlogDetailAction = (id) => {
         dispatch(changeBlogDetailAction(res))
       })
     }
+  }
+}
+
+//access~
+const changeAccessAction = (res) => {
+  return {
+    type: action.CHANGE_ACCESS,
+    access: res
+  }
+}
+export const getAccessAction = (offset, limit) => {
+  return dispatch => {
+    getAccess(offset, limit).then(res => {
+      dispatch(changeAccessAction(res))
+    })
+  }
+}
+export const delAccessAction = (id, offset, limit) => {
+  return dispatch => {
+    deleteAccess(id).then(res => {
+      dispatch(getAccessAction(offset, limit))
+    })
   }
 }

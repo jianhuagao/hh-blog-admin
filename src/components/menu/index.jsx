@@ -22,6 +22,7 @@ export default memo(function MenuLeft(props) {
       >
         <SubMenu key="sub1" icon={<DotChartOutlined />} title="系统实况">
             <Menu.Item key="/dashboard"><Link to="/dashboard">Dashboard</Link></Menu.Item>
+            <Menu.Item key="/access"><Link to="/access">访问记录</Link></Menu.Item>
         </SubMenu>
         <SubMenu key="sub2" icon={<BuildOutlined />} title="数据变更">
           <Menu.Item key="/blogType"><Link to="/blogType">分类管理</Link></Menu.Item>
